@@ -1,24 +1,80 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+
+// context
+import {Products} from "./context/productsContext";
+import { useContext } from "react";
+
+
+import "./App.scss"
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link
+} from "react-router-dom";
+
+
+import Navbar from "./components/Navbar";
+import Shop from "./pages/shop";
+import Home from "./pages/home";
+
+
 
 function App() {
+  
+  const { setDataPr, setFilter} = useContext(Products)
+
+React.useEffect(() =>{
+ 
+
+  async function dbProducts(){
+
+   try{
+     
+     const data = await fetch("http://localhost:3001/api/data");
+     let res = await data.json();
+    
+     setDataPr(res)
+     setFilter(res)
+
+   }catch(e){
+     console.log(e.message)
+     }
+   }
+
+   dbProducts();
+
+  
+}, [])
+
+
+
+  
+
+    
+   
+
+
+
+
+
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+
+        <Navbar/>
+    
+
+    <Routes>
+
+       <Route path="/" element={<Home/>}/>
+       <Route path="/shop" element={<Shop/>}/>
+
+    </Routes>
+      </BrowserRouter>
   );
 }
 
